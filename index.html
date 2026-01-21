@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💌 Sinh nhật nè</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
+    body{
+      min-height:100vh;
+      background:linear-gradient(135deg,#fff7e6,#ffeef2);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+    }
+
+    /* MÀN HÌNH BỨC THƯ */
+    .envelope-screen{
+      position:fixed;
+      inset:0;
+      background:linear-gradient(135deg,#fff3d6,#ffe0e9);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:10;
+      transition:opacity .8s ease,visibility .8s ease;
+    }
+
+    .envelope{
+      width:160px;
+      height:110px;
+      background:#fff;
+      border-radius:12px;
+      position:relative;
+      box-shadow:0 12px 30px rgba(0,0,0,.15);
+      cursor:pointer;
+      animation:float 2.5s ease-in-out infinite;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .heart{
+      font-size:28px;
+      z-index:2;
+      animation:pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.15)}
+    }
+
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .envelope:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,#ffd6a5,#ffb5c5);
+      clip-path:polygon(0 0,100% 0,50% 50%);
+      border-radius:12px 12px 0 0;
+    }
+
+    .tap-text{
+      position:absolute;
+      bottom:-50px;
+      width:100%;
+      text-align:center;
+      color:#ff8fa3;
+      font-size:.95rem;
+    }
+
+    /* CARD SINH NHẬT */
+    .card{
+      background:white;
+      border-radius:28px;
+      padding:36px 28px;
+      text-align:center;
+      max-width:420px;
+      width:90%;
+      box-shadow:0 20px 40px rgba(0,0,0,.15);
+      opacity:0;
+      transform:scale(.9);
+      transition:all .8s ease;
+    }
+
+    .card.show{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    h1{color:#ff8fa3;font-size:2.1rem;margin-bottom:6px}
+    h2{color:#444;font-size:1.3rem;margin-bottom:16px}
+    p{color:#666;line-height:1.6;margin-bottom:22px}
+
+    .icons{font-size:2.4rem;margin-bottom:14px}
+
+    button{
+      border:none;
+      padding:12px 26px;
+      border-radius:999px;
+      background:linear-gradient(135deg,#ffa94d,#ff8fa3);
+      color:white;
+      font-size:1rem;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,.2);
+    }
+
+    button:hover{transform:translateY(-2px)}
+
+    .confetti{
+      position:fixed;
+      top:-10px;
+      font-size:22px;
+      animation:fall linear forwards;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    @keyframes fall{
+      to{transform:translateY(110vh) rotate(360deg)}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MÀN BỨC THƯ -->
+  <div class="envelope-screen" id="envelopeScreen" onclick="openLetter()">
+    <div class="envelope"><div class="heart">❤️</div></div>
+    <div class="tap-text">Chạm vào bức thư 💌</div>
+  </div>
+
+  <!-- NỘI DUNG SINH NHẬT -->
+  <div class="card" id="card">
+    <div class="icons">🍊 🐷</div>
+    <h1>Happy Birthday</h1>
+    <h2>🎂 Anh Thơ ❤️🎂</h2>
+    <p>
+      Chúc em tuổi 19 vui vẻ, hạnh phúc❤️ <br>
+      Nhiều niềm vui nhỏ xíu nhưng đủ làm em cười mỗi ngày ✨
+    </p>
+    <button onclick="startConfetti()">Ăn mừng chút nhee  🎉</button>
+  </div>
+
+  <!-- NHẠC CHILL -->
+  <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7e6c6b9c3a.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    function openLetter(){
+      document.getElementById('envelopeScreen').style.opacity='0';
+      document.getElementById('envelopeScreen').style.visibility='hidden';
+      document.getElementById('card').classList.add('show');
+      document.getElementById('bgm').play();
+    }
+
+    function startConfetti(){
+      // burst lúc đầu
+      for(let i=0;i<60;i++) createConfetti(true);
+      // rơi tiếp cho đẹp
+      for(let i=0;i<120;i++){
+        setTimeout(()=>createConfetti(false),Math.random()*600);
+      }
+    }
+
+    function createConfetti(isBurst){
+      const c=document.createElement('div');
+      c.className='confetti';
+
+      const icons=['❤️','🍊','🐷','🎉','✨','💖','🌸','⭐'];
+      c.textContent=icons[Math.floor(Math.random()*icons.length)];
+
+      c.style.left=Math.random()*innerWidth+'px';
+      c.style.animationDuration=(isBurst?1.5:2.5)+Math.random()*2+'s';
+
+      if(isBurst){
+        c.style.transform='scale(1.2)';
+      }
+
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),5000);
+    }
+  </script>
+</body>
+</html>
